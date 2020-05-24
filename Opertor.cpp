@@ -5,53 +5,55 @@
 #define MAX 128
 using namespace std;
 
-int check(string s)
-{
-	int n = 0;
-	for (unsigned int i = 0; i < s.length(); ++i)
-		if (s[i] == '1')
-			++n;
-	if (n == 128)
-		return -1;
-	else
-		return n;
 
+//AND, OR, XOR, NOT
+/*
+QInt QInt::operator&(const QInt& str)
+{
+	QInt ans;
+	for (int i = 0; i < 4; ++i)
+	{
+		ans.data[i] = data[i] & str.data[i];
+	}
+	return ans;
 }
+QInt QInt::operator|(const QInt& str)
+{
+	QInt ans;
+	for (int i = 0; i < 4; ++i)
+	{
+		ans.data[i] = data[i] | str.data[i];
+	}
+	return ans;
+}
+QInt QInt::operator^(const QInt& str)
+{
+	QInt ans;
+	for (int i = 0; i < 4; ++i)
+	{
+		ans.data[i] = data[i] ^ str.data[i];
+	}
+	return ans;
+}
+QInt& QInt::operator~()
+{
+	QInt ans;
+	for (int i = 0; i < 4; ++i)
+		ans.data[i] = ~data[i];
+	return ans;
+}
+
+*/
+
 
 string Bu2(string bin)
 {
 	for (unsigned int i = 0; i < bin.length(); ++i)
 		bin[i] = (bin[i] == '1') ? '0' : '1';
-
-	//Kiem tra tran so
-	int ch = check(bin);
-	if (ch == -1)
-		cout << "Bao loi tran so";
-	else
-	{
-		if (ch == bin.length())
-		{
-			bin.insert(0, 1, '0');
-		}
-
-		for (unsigned int i = bin.length() - 1; i >= 0; --i)
-		{
-			bool remember = 1; //Cong 1
-			if (bin[i] == '0' && remember == 1)
-			{
-				bin[i] = '1';
-				break;		//Dung lai
-			}
-			else
-				if (bin[i] == '1' && remember == 1)
-					bin[i] = '0';
-
-		}
-		return bin;
-	}
+	return addBin(bin, "1");
 }
 
-string add(string a, string b)
+string addBin(string a, string b)
 {
 	string kq;
 	int size;
@@ -88,7 +90,7 @@ string add(string a, string b)
 	return kq;
 }
 
-string sub(string a, string b)
+string subBin(string a, string b)
 {
 	int size;
 	//Chuan hoa do dai chuoi (a.length() = b.length())
@@ -101,11 +103,11 @@ string sub(string a, string b)
 		b.insert(0, 1, '0');
 	string ans;
 	b = Bu2(b);
-	ans = add(a, b);
+	ans = addBin(a, b);
 	return ans;
 }
 
-string rol(string bin)
+string ROL(string bin)
 {
 
 	bin = bin + bin[0];
@@ -113,7 +115,7 @@ string rol(string bin)
 	return bin;
 }
 
-string ror(string bin)
+string ROR(string bin)
 {
 	int len = bin.length();
 	bin = bin[len - 1] + bin;
@@ -122,7 +124,7 @@ string ror(string bin)
 }
 
 //Dich trai
-string shl(string bin, int x)
+string SHL(string bin, int x)
 {
 	bin.erase(0, x);
 	for (int i = 0; i < x; ++i)
@@ -131,7 +133,7 @@ string shl(string bin, int x)
 }
 
 //Dich phai so hoc
-string sar(string bin, int x)
+string SAR(string bin, int x)
 {
 	if (bin[0] == '0')
 	{
@@ -148,7 +150,7 @@ string sar(string bin, int x)
 	return bin;
 }
 
-string mult(string M, string Q)
+string multBin(string M, string Q)
 {
 
 	//Gan mac dinh a co do dai lon hon
@@ -175,7 +177,7 @@ string mult(string M, string Q)
 		Q0Q1 = Q[Q.length() - 1] + Q1;
 		if (Q0Q1 == "10")
 		{
-			A = sub(A, M);
+			A = subBin(A, M);
 			if (A.length() > lenM)
 				A.erase(0, 1);
 		}
@@ -183,13 +185,13 @@ string mult(string M, string Q)
 		{
 			if (Q0Q1 == "01")
 			{
-				A = add(A, M);
+				A = addBin(A, M);
 				if (A.length() > lenM)
 					A = A.erase(0, 1);
 			}
 		}
 		AQQ1 = A + Q + Q1;
-		AQQ1 = sar(AQQ1, 1);
+		AQQ1 = SAR(AQQ1, 1);
 		A = AQQ1.substr(0, lenM);
 		Q = AQQ1.substr(lenM, lenQ);
 
@@ -210,16 +212,15 @@ void main()
 	cout << "Nhap b: ";
 	cin >> b;
 
-	string kq1 = add(a, b);
+	string kq1 = addBin(a, b);
 	cout << "\nKet qua cong: " << kq1;
 
-	string kq2 = sub(a,b);
+	string kq2 = subBin(a,b);
 	cout << "\nKet qua tru: " << kq2;
 
-	string kq3 = mult(a, b);
+	string kq3 = multBin(a, b);
 	cout << "\nKet qua: " << kq3;
 
 }
-
 
 
